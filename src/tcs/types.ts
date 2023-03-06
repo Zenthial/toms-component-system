@@ -1,18 +1,8 @@
-export interface ComponentInterface {
-    start(): void;
+export abstract class Component {
+    static __INSTANCES: Map<Instance, Component>;
+    constructor(protected Root: Instance) {};
 
-    destroy(): void;
-}
-export class Component<T> implements ComponentInterface {
-    __INSTANCES = new Map<Instance, T>();
+    public abstract start(): void;
 
-    constructor(private Root: Instance) {}
-
-    public start(): void {
-        error("DID NOT IMPLEMENT START")
-    }
-
-    public destroy(): void {
-        error("DID NOT IMPLEMENT DESTROY")
-    }
+    public abstract destroy(): void;
 }
