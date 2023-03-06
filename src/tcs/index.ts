@@ -6,9 +6,9 @@ interface P {}
 // using the fact that const means the value can't be changed, not the actual map here
 const component_tag_map = new Map<string, typeof Component<P>>();
 
-function make_component<T extends typeof Component<P>>(instance: Instance, component_tag: string, component: T) {
+function make_component<T extends typeof Component<P>>(instance: Instance, component: T) {
     const component_instance = new component(instance);
-    component_instance.__INSTANCES.set(instance, component)
+    component_instance.__INSTANCES.set(instance, component_instance)
 
     task.spawn(() => component_instance.start())
 }
@@ -62,7 +62,7 @@ namespace tcs {
         component_tag_map.set(component_tag, component);
         for (const instance of CollectionService.GetTagged(component_tag)) {
             if (component_ancestor.IsAncestorOf(instance)) {
-                make_component(instance, component_tag, component);
+                make_component(instance, component);
             }
         }
 
@@ -71,7 +71,7 @@ namespace tcs {
 
         CollectionService.GetInstanceAddedSignal(component_tag).Connect(instance => {
             if (component_ancestor.IsAncestorOf(instance)) {
-                make_component(instance, component_tag, component);
+                make_component(instance, component);
             }
         })
 
