@@ -3,6 +3,9 @@ import { Component } from "./types";
 
 interface P {}
 
+// 8 second timeout
+const TIMEOUT = 8 
+
 // using the fact that const means the value can't be changed, not the actual map here
 const component_tag_map = new Map<string, typeof Component<P>>();
 
@@ -22,6 +25,41 @@ function remove_component(instance: Instance, component_tag: string) {
     }
 }
 
+// will error if component does not exist after TIMEOUT
+function wait_for_component(component_tag: string): typeof Component<P> {
+    let component = component_tag_map.get(component_tag);
+    
+    const start = os.time();
+    while (!component) {
+        component = component_tag_map.get(component_tag);
+
+        if ((os.time() - start) > TIMEOUT) {
+            error(`COMPONENT TIMEOUT FOR TAG ${component_tag}`);
+        }
+    }
+
+    return component;
+}
+
+// will error if component does not exist after TIMEOUT
+// looking for the specific component instance, rather than the component class
+function wait_for_component_instance(instance: Instance, component_tag: string): Component<P> {
+    const component = component_tag_map.get(component_tag) as unknown as Component<P>;
+    const instance_map = component.__INSTANCES;
+    let component_instance = instance_map.get(instance)
+    
+    const start = os.time();
+    while (component_instance === undefined) {
+        component_instance = instance_map.get(instance);
+
+        if ((os.time() - start) > TIMEOUT) {
+            error(`COMPONENT_INSTANCE TIMEOUT FOR TAG ${component_tag} on ${instance.Name}${instance}`);
+        }
+    }
+
+    return component_instance as unknown as Component<P>;
+}
+
 namespace tcs {
     export function get_component(instance: Instance, component_tag: string): Component<P> | undefined {
         const component_class = component_tag_map.get(component_tag) as unknown as Component<P>;
@@ -33,6 +71,18 @@ namespace tcs {
         }
 
         return possible_component as Component<P>
+    }
+
+    // typically it is best to await components instead of getting them, unless you know the components will already exist
+    export function await_component(instance: Instance, component_tag: string) {
+        const component_instance = get_component(instance, component_tag);
+
+        if (!component_instance) {
+            wait_for_component(component_tag);
+            return wait_for_component_instance(instance, component_tag);
+        }
+
+        return component_instance;
     }
 
     export function create_component(
