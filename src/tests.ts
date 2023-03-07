@@ -1,5 +1,5 @@
 import tcs from "./tcs";
-import { Component } from "./tcs/types";
+import Component from "./tcs/types";
 
 class TestComponent extends Component {
     constructor(root: Instance) {
