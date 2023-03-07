@@ -10,6 +10,9 @@ interface ComponentInstance {
 
 interface ComponentClass {
     __INSTANCES: Map<Instance, ComponentInstance>;
+    TAG: string,
+    INSTANCE: Instance,
+
     new(root: Instance): ComponentInstance;
 }
 
@@ -47,7 +50,12 @@ function remove_component(instance: Instance, component: ComponentClass) {
 }
 
 namespace tcs {
-    export function register_component(component: ComponentClass, component_tag: string, component_instance: Instance) {
+    export function create_component(component: ComponentClass) {
+        let component_tag = component.TAG;
+        let component_instance = component.INSTANCE;
+        
+        assert(component_tag !== undefined, `Component tag is not defined on component ${component}`);
+
         for (const possible_instance of CollectionService.GetTagged(component_tag)) {
             if (component_instance.IsAncestorOf(possible_instance)) {
                 make_component(possible_instance, component);
