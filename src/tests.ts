@@ -22,7 +22,7 @@ class TestComponent extends Component {
     }
 }
 
-tcs.create_component(TestComponent, "TestComponent", game);
+tcs.create_component(TestComponent);
 
 const instance = new Instance("Part");
 const instance_component = tcs.get_component<TestComponent>(instance, TestComponent);

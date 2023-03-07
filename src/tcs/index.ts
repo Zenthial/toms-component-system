@@ -51,8 +51,8 @@ function remove_component(instance: Instance, component: ComponentClass) {
 
 namespace tcs {
     export function create_component(component: ComponentClass) {
-        let component_tag = component.TAG;
-        let component_instance = component.INSTANCE;
+        const component_tag = component.TAG;
+        const component_instance = component.INSTANCE;
         
         assert(component_tag !== undefined, `Component tag is not defined on component ${component}`);
 
@@ -79,16 +79,29 @@ namespace tcs {
     export function get_component<T>(instance: Instance, component: ComponentClass): T | undefined {
         const component_instance = component.__INSTANCES.get(instance);
 
-        return component_instance as unknown as T
+        return component_instance as T
     }
 
     // may error
-    export function await_component<P extends ComponentInstance, T extends ComponentClass>(instance: Instance, component: T): P {
-        return wait_for_component_instance(instance, component) as P;
+    export function await_component<T>(instance: Instance, component: ComponentClass): T {
+        return wait_for_component_instance(instance, component) as T;
     }
 
     export function has_component(instance: Instance, component: ComponentClass): boolean {
         return component.__INSTANCES.get(instance) !== undefined
+    }
+
+    /**
+     * Loads all components within a directory
+     */
+    export function load_directory(directory: Instance[]) {
+        for (const instance of directory) {
+            if (instance.IsA("ModuleScript")) {
+                require(instance)
+            } else if (instance.IsA("Folder")) {
+                load_directory(instance.GetChildren())
+            }
+        }
     }
 }
 
