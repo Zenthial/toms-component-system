@@ -1,5 +1,5 @@
 export default abstract class Component {
-    static __INSTANCES: Map<Instance, Component>;
+    static __INSTANCES = new Map<Instance, Component>();
 
     constructor(protected Root: Instance) {}
 
