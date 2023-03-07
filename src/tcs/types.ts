@@ -1,5 +1,7 @@
 export default abstract class Component {
     static __INSTANCES = new Map<Instance, Component>();
+    static TAG: string;
+    static INSTANCE: Instance = game;
 
     constructor(protected Root: Instance) {}
 

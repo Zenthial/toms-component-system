@@ -2,6 +2,9 @@ import tcs from "./tcs";
 import Component from "./tcs/types";
 
 class TestComponent extends Component {
+    TAG = "TestComponent";
+    INSTANCE = game;
+
     constructor(root: Instance) {
         super(root);
     }
@@ -19,7 +22,7 @@ class TestComponent extends Component {
     }
 }
 
-tcs.register_component(TestComponent, "TestComponent", game);
+tcs.create_component(TestComponent, "TestComponent", game);
 
 const instance = new Instance("Part");
 const instance_component = tcs.get_component<TestComponent>(instance, TestComponent);
