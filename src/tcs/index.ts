@@ -14,7 +14,7 @@ interface ComponentClass {
 }
 
 function make_component(instance: Instance, component: ComponentClass) {
-    let component_instance = new component(instance);
+    const component_instance = new component(instance);
     component.__INSTANCES.set(instance, component_instance);
 
     task.spawn(() => component_instance.start());
@@ -37,24 +37,50 @@ function wait_for_component_instance(instance: Instance, component: ComponentCla
     return component_instance;
 }
 
+function remove_component(instance: Instance, component: ComponentClass) {
+    const component_instance = tcs.get_component<ComponentInstance>(instance, component);
+
+    if (component_instance) {
+        component_instance.destroy()
+        component.__INSTANCES.delete(instance)
+    }
+}
+
 namespace tcs {
     export function register_component(component: ComponentClass, component_tag: string, component_instance: Instance) {
-        for (let possible_instance of CollectionService.GetTagged(component_tag)) {
+        for (const possible_instance of CollectionService.GetTagged(component_tag)) {
             if (component_instance.IsAncestorOf(possible_instance)) {
                 make_component(possible_instance, component);
             }
         }
+
+        // avoid double firing
+        task.wait()
+
+        CollectionService.GetInstanceAddedSignal(component_tag).Connect(instance => {
+            if (component_instance.IsAncestorOf(instance)) {
+                make_component(instance, component);
+            }
+        })
+
+        CollectionService.GetInstanceRemovedSignal(component_tag).Connect(instance => {
+            remove_component(instance, component)
+        })
     }
 
-    export function get_component<P extends ComponentInstance, T extends ComponentClass>(instance: Instance, component: T): P | undefined {
-        let component_instance = component.__INSTANCES.get(instance);
+    export function get_component<T>(instance: Instance, component: ComponentClass): T | undefined {
+        const component_instance = component.__INSTANCES.get(instance);
 
-        return component_instance as unknown as P;
+        return component_instance as unknown as T
     }
 
     // may error
     export function await_component<P extends ComponentInstance, T extends ComponentClass>(instance: Instance, component: T): P {
         return wait_for_component_instance(instance, component) as P;
+    }
+
+    export function has_component(instance: Instance, component: ComponentClass): boolean {
+        return component.__INSTANCES.get(instance) !== undefined
     }
 }
 
