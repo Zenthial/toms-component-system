@@ -1,7 +1,7 @@
 {
   "name": "@rbxts/tcs",
   "description": "A component system designed around hands-off initialization",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "repository": "https://github.com/Zenthial/toms-component-system",
   "author": "Thomas Schollenberger",
   "main": "out/tcs/init.lua",

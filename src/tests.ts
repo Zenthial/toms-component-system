@@ -1,5 +1,4 @@
-import tcs from "./tcs";
-import Component from "./tcs/types";
+import { tcs, Component } from "./tcs";
 
 class TestComponent extends Component {
     TAG = "TestComponent";

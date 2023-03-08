@@ -1,0 +1,30 @@
+{
+    "tcs": {
+        "prefix": [
+            "tcs",
+            "component",
+            "tcs_component"
+        ],
+        "body": [
+            "import {tcs, Component} from \"@rbxts/tcs\"",
+            "",
+            "class ${0:$TM_FILENAME_BASE} extends Component {",
+            "\tstatic TAG = \"${0:$TM_FILENAME_BASE}\"",
+            "",
+            "\tconstructor(root: Instance) {",
+            "\t\tsuper(root)",
+            "\t}",
+            "",
+            "\tpublic start() {",
+            "\t\t",
+            "\t}",
+            "",
+            "\tpublic destroy() {",
+            "\t\t",
+            "\t}",
+            "}",
+            "",
+            "tcs.create_component(TestComponent)"
+        ]
+    }
+}
