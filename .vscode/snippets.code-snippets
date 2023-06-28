@@ -1,0 +1,66 @@
+{
+    "tcs": {
+        "prefix": [
+            "tcs, component_tcs",
+            "component"
+        ],
+        "scope": "lua",
+        "description": "autofills the tcs component",
+        "body": [
+            "-- ${0:$CURRENT_MONTH}/${0:$CURRENT_DATE}/${0:$CURRENT_YEAR}/",
+            "local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")",
+            "",
+            "local tcs = require(ReplicatedStorage:WaitForChild(\"Shared\"):WaitForChild(\"tcs\"))",
+            "",
+            "type ${0:$TM_FILENAME_BASE}_T = {",
+            "\t__index: ${0:$TM_FILENAME_BASE}_T,",
+            "\tName: string,",
+            "\tTag: string,",
+            "",
+            "}",
+            "",
+            "local ${0:$TM_FILENAME_BASE}: ${0:$TM_FILENAME_BASE}_T = {}",
+            "${0:$TM_FILENAME_BASE}.__index = ${0:$TM_FILENAME_BASE}",
+            "${0:$TM_FILENAME_BASE}.Name = \"${0:$TM_FILENAME_BASE}\"",
+            "${0:$TM_FILENAME_BASE}.Tag = \"${0:$TM_FILENAME_BASE}\"",
+            "${0:$TM_FILENAME_BASE}.Ancestor = game",
+            "",
+            "function ${0:$TM_FILENAME_BASE}.new(root: any)",
+            "\treturn setmetatable({",
+            "\t\tRoot = root,",
+            "\t}, ${0:$TM_FILENAME_BASE})",
+            "end",
+            "",
+            "function ${0:$TM_FILENAME_BASE}:Start()",
+            "",
+            "end",
+            "",
+            "function ${0:$TM_FILENAME_BASE}:Destroy()",
+            "-- Some cleaner function here",
+            "end",
+            "",
+            "tcs.create_component(${0:$TM_FILENAME_BASE})",
+            "",
+            "return ${0:$TM_FILENAME_BASE}"
+        ]
+    },
+    "tcs_module": {
+        "prefix": [
+            "tcs_module, module_tcs",
+            "module"
+        ],
+        "scope": "lua",
+        "description": "autofills the tcs module",
+        "body": [
+            "local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")",
+            "",
+            "local ${0:$TM_FILENAME_BASE} = {}",
+            "",
+            "function ${0:$TM_FILENAME_BASE}:Start()",
+            "",
+            "end",
+            "",
+            "return ${0:$TM_FILENAME_BASE}"
+        ]
+    }
+}
